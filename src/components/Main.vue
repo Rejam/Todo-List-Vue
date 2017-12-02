@@ -1,10 +1,13 @@
 <template>
   <article>
-    <input type="text" v-model='newTodo'><button @click='addTodo'>Add</button>
+    <input type="text" v-model='newTodo' @keyup.enter="addTodo">
+    <button @click='addTodo'>Add</button>
+
     <ol>
-      <li v-for='todo in todos' :key="todo.index">
+      <li v-for='todo in todos' :key='todo.id'>
         {{todo.name}}
-        <input type="checkbox" :checked='todo.complete'/>
+        <input type="checkbox" v-model='todo.complete' />
+        <button @click='deleteTodo(todo.id)'>delete</button>
       </li>
     </ol>
   </article>
@@ -12,19 +15,25 @@
 
 <script>
 export default {
-  data: function() {
+  data() {
     return {
+      count: 0,
       newTodo: "",
       todos: []
     };
   },
+
   methods: {
     addTodo() {
       this.todos.push({
         name: this.newTodo,
-        complete: false
+        complete: false,
+        id: this.count++
       });
       this.newTodo = "";
+    },
+    deleteTodo(id) {
+      this.todos = this.todos.filter(todo => todo.id != id);
     }
   }
 };
